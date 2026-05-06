@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15.3
+    container_name: pingpong_dp
+    environment:
+      POSTGRES_DB: pingpong
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pingpong_data:/var/lib/postgresql/data
+  
+  app:
+    build: .
+    container_name: pingpong_app
+    depends_on:
+      - db
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: pingpong
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432  
+    ports:
+      - "8000:8000"
+
+
+volumes:
+  pingpong_data:
